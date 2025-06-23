@@ -1,0 +1,111 @@
+﻿/* Enhanced Stats Cards - FIXED VERSION - Tanpa Efek Gerak */
+.stats-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Hapus transition yang berlebihan */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover hanya mengubah shadow sedikit */
+.stats-card:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+    /* TIDAK ADA transform atau efek bergerak */
+}
+
+.stats-card.pages {
+    border-top: 4px solid #667eea;
+}
+
+.stats-card.services {
+    border-top: 4px solid #10b981;
+}
+
+.stats-card.timelines {
+    border-top: 4px solid #3b82f6;
+}
+
+.stats-card.contacts {
+    border-top: 4px solid #f59e0b;
+}
+
+/* Stats Icon - FIXED - Tidak Bergerak */
+.stats-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    /* HAPUS transition dan animasi */
+    position: relative;
+}
+
+/* Hover icon hanya mengubah warna, TIDAK bergerak */
+.stats-card:hover .stats-icon {
+    color: #667eea;
+    /* TIDAK ADA transform, scale, atau animasi apapun */
+}
+
+.stats-number {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 15px 0 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Quick Actions - FIXED - Efek Minimal */
+.quick-action-btn {
+    position: relative;
+    overflow: hidden;
+    /* HAPUS transition berlebihan */
+}
+
+.quick-action-btn:hover {
+    background-color: #f8f9fa;
+    /* HAPUS translateY dan box-shadow berlebihan */
+    /* TIDAK ADA transform apapun */
+}
+
+/* Contact Items - FIXED - Efek Minimal */
+.contact-item {
+    border-radius: 12px;
+    padding: 15px;
+    margin: 10px 0;
+    position: relative;
+    /* HAPUS transition */
+}
+
+.contact-item:hover {
+    background: #f8f9fa;
+    /* HAPUS transform translateX */
+    /* TIDAK ADA box-shadow berlebihan */
+}
+
+/* Responsive - FIXED - Tanpa Transform */
+@media (max-width: 768px) {
+    .stats-card:hover {
+        /* HAPUS transform apapun */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Cards Umum - FIXED - Efek Minimal */
+.card {
+    border: none;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    /* HAPUS transition berlebihan */
+}
+
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    /* TIDAK ADA transform */
+}

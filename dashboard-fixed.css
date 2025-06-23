@@ -1,0 +1,117 @@
+﻿/* Dashboard Fixed CSS - Tanpa Efek Gerak Berlebihan */
+
+/* Hapus semua animasi keyframes yang tidak perlu */
+/* Tidak ada @keyframes fadeInUp, slideInLeft, pulse, glow, shake, bounce, countUp */
+
+/* Stats Cards - Tanpa Animasi Bergerak */
+.stats-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Hapus transition yang berlebihan */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover hanya mengubah shadow ringan */
+.stats-card:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+    /* Tidak ada transform atau efek bergerak */
+}
+
+.stats-card.pages {
+    border-top: 4px solid #667eea;
+}
+
+.stats-card.services {
+    border-top: 4px solid #10b981;
+}
+
+.stats-card.timelines {
+    border-top: 4px solid #3b82f6;
+}
+
+.stats-card.contacts {
+    border-top: 4px solid #f59e0b;
+}
+
+/* Stats Icon - Tidak Bergerak */
+.stats-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    /* Hapus transition */
+    position: relative;
+    /* Icon tetap di posisi yang sama */
+}
+
+/* Hover icon hanya mengubah warna */
+.stats-card:hover .stats-icon {
+    color: #667eea;
+    /* Tidak ada transform atau animasi */
+}
+
+.stats-number {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 15px 0 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Hapus animasi counter */
+}
+
+/* Quick Actions - Efek Minimal */
+.quick-action-btn {
+    /* Hapus transition berlebihan */
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-action-btn:hover {
+    /* Hanya perubahan warna background, tidak ada transform */
+    background-color: #f8f9fa;
+    /* Tidak ada translateY atau box-shadow berlebihan */
+}
+
+/* Contact Items - Efek Minimal */
+.contact-item {
+    border-radius: 12px;
+    padding: 15px;
+    margin: 10px 0;
+    position: relative;
+}
+
+.contact-item:hover {
+    background: #f8f9fa;
+    /* Hapus transform translateX */
+    /* Tidak ada box-shadow berlebihan */
+}
+
+/* Responsive - Tanpa Animasi */
+@media (max-width: 768px) {
+    .stats-card:hover {
+        /* Tidak ada transform */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Cards Umum - Efek Minimal */
+.card {
+    border: none;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    /* Hapus transition berlebihan */
+}
+
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    /* Tidak ada transform */
+}

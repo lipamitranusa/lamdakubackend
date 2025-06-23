@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Delete Function</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body>
+    <h1>Test Delete Function</h1>
+    
+    <!-- Test Button -->
+    <button type="button" class="btn btn-outline-danger" 
+            onclick="deleteArticle(1)" title="Test Delete">
+        <i class="fas fa-trash"></i> Test Delete Article
+    </button>
+    
+    <script>
+    // Copy the exact function from your view
+    function deleteArticle(articleId) {
+        console.log('deleteArticle function called with ID:', articleId);
+        
+        if (confirm('Yakin ingin menghapus artikel ini? Tindakan ini tidak dapat dibatalkan!')) {
+            console.log('User confirmed deletion');
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/admin/articles/${articleId}`;
+            form.innerHTML = `
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="DELETE">
+            `;
+            
+            console.log('Form created:', form);
+            console.log('Form action:', form.action);
+            console.log('Form HTML:', form.innerHTML);
+            
+            document.body.appendChild(form);
+            
+            // For testing, don't actually submit
+            // form.submit();
+            console.log('Form would be submitted now');
+            
+            // Clean up test form
+            document.body.removeChild(form);
+        } else {
+            console.log('User cancelled deletion');
+        }
+    }
+    
+    // Test if function is accessible
+    console.log('deleteArticle function defined:', typeof deleteArticle);
+    
+    // Alternative test button
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, testing function availability');
+        
+        // Create a test button programmatically
+        const testBtn = document.createElement('button');
+        testBtn.textContent = 'Programmatic Test Delete';
+        testBtn.onclick = function() {
+            deleteArticle(999);
+        };
+        document.body.appendChild(testBtn);
+    });
+    </script>
+</body>
+</html>
