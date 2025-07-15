@@ -236,6 +236,54 @@ php artisan config:cache
 
 ## 🚨 JIKA GIT TIDAK TERSEDIA
 
+### 📁 METODE FTP UPLOAD (PALING MUDAH)
+
+**Langkah-langkah upload manual via FTP/cPanel:**
+
+#### 1. Download Project di Komputer
+```
+1. Buka: https://github.com/lipamitranusa/lamdakubackend
+2. Klik "Code" → "Download ZIP"
+3. Extract file ZIP di komputer
+```
+
+#### 2. Upload via cPanel File Manager
+```
+1. Login ke cPanel Hostinger
+2. Buka "File Manager"
+3. Masuk ke: domains/lamdaku.com/public_html/
+4. Hapus semua file lama (atau backup ke folder lain)
+5. Upload semua file dari folder lamdakubackend-main/
+6. Extract jika upload dalam bentuk ZIP
+```
+
+#### 3. Set Permissions via cPanel
+```
+File artisan: 755
+Folder storage/: 755 (recursive)
+Folder bootstrap/cache/: 755 (recursive)
+File .env: 644
+```
+
+#### 4. Setup via File Manager
+```bash
+# Rename .env.production menjadi .env
+# Edit .env dan ganti DB_PASSWORD dengan password asli
+# Upload dan jalankan manual-setup.php
+```
+
+#### 5. Jalankan Setup Script
+```bash
+# Via cPanel Terminal atau SSH:
+php manual-setup.php
+
+# Output:
+# ✅ All required Laravel files found!
+# ✅ artisan permissions set
+# ✅ .env created
+# 🎉 MANUAL SETUP COMPLETE!
+```
+
 ### Alternatif 1: Download ZIP
 
 ```bash
