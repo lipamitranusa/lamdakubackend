@@ -1,4 +1,30 @@
-# 🚨 QUICK FIX untuk "Could not open input file"
+# 🚨 QUICK FIX untuk Missing Files & Artisan Errors
+
+## ⚠️ ARTISAN ERROR: "Could not open input file: artisan"
+
+**Masalah:** File project Laravel tidak ada di server (artisan, composer.json, app/, dll.)
+
+### SOLUSI LENGKAP:
+
+```bash
+# 1. Pastikan di direktori yang benar
+cd /home/u329849080/domains/lamdaku.com/public_html/api
+
+# 2. Hapus semua file lama (jika ada)
+rm -rf * .*
+
+# 3. Clone project dari GitHub
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+
+# 4. Verifikasi file ada
+ls -la composer.json artisan
+
+# 5. Upgrade Composer ke versi 2 (PENTING!)
+composer self-update
+
+# 6. Install dependencies
+composer install --no-dev --optimize-autoloader
+```
 
 ## Jika error "Could not open input file: setup-lamdaku.php"
 
@@ -133,3 +159,148 @@ php artisan storage:link
 # 6. Cache config
 php artisan config:cache
 ```
+
+# 🚨 QUICK FIX - FOKUS GIT ONLY
+
+## ⚠️ MASALAH: File `artisan` Tidak Ada
+
+**SOLUSI SEDERHANA: Gunakan Git Clone**
+
+### 🎯 ONE-LINER SOLUTION (Copy-Paste di Server)
+
+```bash
+# COPY-PASTE COMMAND INI:
+cd /home/u329849080/domains/lamdaku.com/public_html && rm -rf * .* 2>/dev/null; git clone https://github.com/lipamitranusa/lamdakubackend.git . && chmod +x artisan && cp .env.production .env 2>/dev/null || cp .env.example .env && chmod -R 755 storage bootstrap/cache && echo "✅ DONE! Update DB_PASSWORD in .env then run: composer install"
+```
+
+### 📝 LANGKAH MANUAL (Step by Step)
+
+```bash
+# 1. Masuk ke direktori website
+cd /home/u329849080/domains/lamdaku.com/public_html
+
+# 2. Bersihkan direktori (backup dulu jika perlu)
+rm -rf * .*
+
+# 3. Clone project dari GitHub
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+
+# 4. Verifikasi file artisan ada
+ls -la artisan
+# Output: -rwxr-xr-x 1 user user 1733 artisan
+
+# 5. Copy .env file
+cp .env.production .env
+
+# 6. Set permissions
+chmod +x artisan
+chmod -R 755 storage bootstrap/cache
+chmod 644 .env
+
+# 7. Test artisan
+php artisan --version
+# Output: Laravel Framework 8.x.x
+```
+
+### ⚙️ UPDATE DATABASE PASSWORD
+
+```bash
+# Edit .env file
+nano .env
+
+# Ganti baris ini:
+# DB_PASSWORD=YOUR_DATABASE_PASSWORD_HERE
+# Dengan password database asli Anda
+
+# Save: Ctrl+X, Y, Enter
+```
+
+### 🚀 INSTALL & SETUP
+
+```bash
+# 1. Install dependencies
+composer install --no-dev --optimize-autoloader
+
+# 2. Generate key
+php artisan key:generate
+
+# 3. Run migrations
+php artisan migrate --force
+
+# 4. Storage link
+php artisan storage:link
+
+# 5. Cache config
+php artisan config:cache
+```
+
+## 🚨 JIKA GIT TIDAK TERSEDIA
+
+### Alternatif 1: Download ZIP
+
+```bash
+# Download manual
+wget https://github.com/lipamitranusa/lamdakubackend/archive/refs/heads/main.zip
+unzip main.zip
+mv lamdakubackend-main/* .
+mv lamdakubackend-main/.* . 2>/dev/null || true
+rm -rf lamdakubackend-main main.zip
+ls -la artisan
+```
+
+### Alternatif 2: Upload via FTP
+
+1. **Di komputer local:**
+   - Download: https://github.com/lipamitranusa/lamdakubackend/archive/refs/heads/main.zip
+   - Extract ZIP file
+
+2. **Upload ke server via cPanel File Manager:**
+   - Upload semua file ke: `/home/u329849080/domains/lamdaku.com/public_html/`
+   - Set permissions: chmod +x artisan
+
+## ✅ VERIFIKASI SETUP BERHASIL
+
+```bash
+# 1. Cek artisan
+php artisan --version
+
+# 2. Cek struktur Laravel
+ls -la app/ bootstrap/ config/ database/
+
+# 3. Test basic
+curl https://lamdaku.com/api 2>/dev/null || echo "Site not ready yet"
+```
+
+## 🎯 TROUBLESHOOTING
+
+### Error: "git: command not found"
+```bash
+# Gunakan wget:
+wget https://github.com/lipamitranusa/lamdakubackend/archive/refs/heads/main.zip && unzip main.zip && mv lamdakubackend-main/* . && rm -rf main.zip lamdakubackend-main
+```
+
+### Error: "Permission denied"
+```bash
+chmod +x artisan
+chmod -R 755 storage bootstrap/cache
+```
+
+### Error: "Directory not empty"
+```bash
+# Backup & clean:
+mkdir backup_old && mv * backup_old/ 2>/dev/null; git clone https://github.com/lipamitranusa/lamdakubackend.git .
+```
+
+---
+
+## 📋 CHECKLIST SETELAH GIT CLONE
+
+- ✅ File `artisan` ada
+- ✅ File `composer.json` ada  
+- ✅ Folder `app/`, `config/`, `database/` ada
+- ✅ File `.env` ada (copy dari .env.production)
+- ⚙️ Update `DB_PASSWORD` di .env
+- 📦 Run `composer install`
+- 🚀 Setup Laravel (`migrate`, `storage:link`, etc.)
+
+**🌐 Test URL:** https://lamdaku.com`

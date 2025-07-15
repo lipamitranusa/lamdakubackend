@@ -268,6 +268,57 @@ php artisan key:generate --force
 
 ---
 
+## 🚨 Common Error Solutions
+
+### Error 1: "You are using Composer 1 which is deprecated"
+**Solution:**
+```bash
+# Try to upgrade Composer to version 2
+composer self-update --2
+
+# If upgrade fails, use Composer 1 with ignore flags
+composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+```
+
+### Error 2: "Composer could not find a composer.json file"
+**Problem:** Laravel project files are missing or you're in wrong directory
+
+**Solution:**
+```bash
+# Check current location
+pwd
+ls -la
+
+# If no composer.json, you need to get the project files first:
+# Option A: Clone from GitHub
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+
+# Option B: Use emergency project setup
+curl -O https://your-domain.com/emergency-project-setup.php
+php emergency-project-setup.php
+
+# Option C: Manual download if git is not available
+wget https://github.com/lipamitranusa/lamdakubackend/archive/refs/heads/main.zip
+unzip main.zip
+mv lamdakubackend-main/* .
+rm -rf lamdakubackend-main main.zip
+```
+
+### Error 3: "Could not open input file: setup-lamdaku.php"
+```bash
+# Check if you're in the right directory
+pwd
+
+# List all PHP files to confirm
+ls -la *.php
+
+# If setup files are missing, re-clone the repository
+rm -rf *
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+```
+
+---
+
 ## ✅ SUCCESS CHECKLIST
 
 - [ ] ✅ Project uploaded to `/public_html/api/`
