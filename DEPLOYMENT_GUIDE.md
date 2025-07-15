@@ -45,16 +45,44 @@ Complete step-by-step guide untuk deploy LAMDAKU CMS ke Hostinger production ser
 # Method 1: Git Clone (Recommended)
 ssh -p 65002 u329849080@37.44.245.60
 cd /home/u329849080/domains/lamdaku.com/public_html/api
-git clone https://github.com/username/lamdaku-cms-backend.git .
+
+# Clone repository yang sudah updated
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+
+# Verify files exist
+ls -la setup-lamdaku.php
 
 # Method 2: Upload ZIP dan extract via File Manager
 ```
 
-### STEP 2: Run Setup Script
+### STEP 2: Verify Files & Run Setup Script
 
 ```bash
+# Check if setup files exist
+ls -la setup-lamdaku.php setup-database.php
+
+# If files don't exist, check current directory
+pwd
+ls -la
+
+# If you're in wrong directory, navigate to correct one
+cd /home/u329849080/domains/lamdaku.com/public_html/api
+
 # Jalankan setup utama
 php setup-lamdaku.php
+```
+
+**Jika error "Could not open input file":**
+```bash
+# Check if you're in the right directory
+pwd
+
+# List all PHP files to confirm
+ls -la *.php
+
+# If setup files are missing, re-clone the repository
+rm -rf *
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
 ```
 
 **Output yang diharapkan:**
@@ -157,6 +185,55 @@ Password: [Set in Hostinger database panel]
 ---
 
 ## 🚨 TROUBLESHOOTING
+
+### Error: "Could not open input file: setup-lamdaku.php"
+
+**Penyebab**: Setup files tidak ada di server
+
+**Solusi**:
+```bash
+# 1. Check current directory
+pwd
+ls -la *.php
+
+# 2. Ensure you're in the right directory
+cd /home/u329849080/domains/lamdaku.com/public_html/api
+
+# 3. If files are missing, re-clone repository
+rm -rf * .*  # Be careful with this command!
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+
+# 4. Alternative: Manual emergency setup
+# Create file: emergency-setup.php and copy the emergency script content
+php emergency-setup.php
+```
+
+**Emergency Manual Setup** (copy-paste this code):
+```php
+<?php
+// Create .env file
+$env = 'APP_NAME="LAMDAKU CMS"
+APP_ENV=production
+APP_KEY=
+APP_DEBUG=false
+APP_URL=https://lamdaku.com
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=u329849080_lamdaku_prod
+DB_USERNAME=u329849080_lamdaku_user
+DB_PASSWORD=YOUR_DATABASE_PASSWORD_HERE';
+file_put_contents('.env', $env);
+
+// Create directories
+$dirs = ['storage/logs','storage/framework/cache/data','storage/framework/sessions','storage/framework/views','storage/app/public','bootstrap/cache'];
+foreach($dirs as $dir) if(!is_dir($dir)) mkdir($dir, 0755, true);
+
+// Set permissions
+chmod('storage', 0755); chmod('bootstrap/cache', 0755);
+echo "Emergency setup complete!";
+?>
+```
 
 ### Error: "500 Internal Server Error"
 ```bash
