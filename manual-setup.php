@@ -32,6 +32,69 @@ if (!empty($missingFiles)) {
 
 echo "✅ All required Laravel files found!\n\n";
 
+// Check and fix artisan file
+echo "\n🔧 Checking artisan file...\n";
+
+if (!file_exists('artisan')) {
+    echo "❌ artisan file not found! Attempting to create...\n";
+    
+    // Try to download artisan file
+    $artisanContent = file_get_contents('https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/main/artisan');
+    if ($artisanContent) {
+        file_put_contents('artisan', $artisanContent);
+        chmod('artisan', 0755);
+        echo "✅ artisan file downloaded and created\n";
+    } else {
+        // Create basic artisan file
+        $artisanContent = '#!/usr/bin/env php
+<?php
+
+define(\'LARAVEL_START\', microtime(true));
+
+require __DIR__.\'/vendor/autoload.php\';
+
+$app = require_once __DIR__.\'/bootstrap/app.php\';
+
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
+
+$kernel->terminate($input, $status);
+
+exit($status);';
+        
+        file_put_contents('artisan', $artisanContent);
+        chmod('artisan', 0755);
+        echo "✅ Basic artisan file created\n";
+    }
+} else {
+    // Check if artisan is executable
+    $perms = fileperms('artisan');
+    if (!($perms & 0x0040)) { // Check if owner has execute permission
+        chmod('artisan', 0755);
+        echo "✅ artisan permissions fixed (755)\n";
+    } else {
+        echo "✅ artisan file exists and is executable\n";
+    }
+    
+    // Check if artisan file is not empty and starts correctly
+    $artisanContent = file_get_contents('artisan');
+    if (empty($artisanContent) || strpos($artisanContent, '#!/usr/bin/env php') !== 0) {
+        echo "⚠️ artisan file appears corrupted, attempting to fix...\n";
+        
+        // Re-download or recreate artisan
+        $newArtisanContent = file_get_contents('https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/main/artisan');
+        if ($newArtisanContent) {
+            file_put_contents('artisan', $newArtisanContent);
+            chmod('artisan', 0755);
+            echo "✅ artisan file fixed from repository\n";
+        }
+    }
+}
+
 // Set file permissions
 echo "🔐 Setting file permissions...\n";
 

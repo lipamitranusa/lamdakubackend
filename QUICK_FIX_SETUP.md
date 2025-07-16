@@ -351,4 +351,34 @@ mkdir backup_old && mv * backup_old/ 2>/dev/null; git clone https://github.com/l
 - 📦 Run `composer install`
 - 🚀 Setup Laravel (`migrate`, `storage:link`, etc.)
 
-**🌐 Test URL:** https://lamdaku.com`
+**🌐 Test URL:** https://lamdaku.com
+
+---
+
+## 🔄 DEPLOYMENT ULANG LENGKAP
+
+**Jika ingin melakukan deployment ulang dari awal (fresh installation):**
+
+### 🚀 CARA TERMUDAH - Deployment Otomatis
+
+```bash
+# Download dan jalankan script deployment:
+wget https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/master/fresh-deploy.sh
+chmod +x fresh-deploy.sh
+./fresh-deploy.sh
+
+# ATAU versi PHP (jika bash tidak tersedia):
+wget https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/master/fresh-deploy.php
+php fresh-deploy.php
+```
+
+### 📋 MANUAL DEPLOYMENT ULANG
+
+1. **Backup data lama**
+2. **Bersihkan direktori server**
+3. **Download project terbaru**
+4. **Setup environment (.env)**
+5. **Install dependencies**
+6. **Run Laravel setup**
+
+**📖 Panduan lengkap:** Lihat file `REDEPLOY_GUIDE.md`
