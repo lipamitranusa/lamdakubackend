@@ -333,6 +333,18 @@ chmod +x artisan
 chmod -R 755 storage bootstrap/cache
 ```
 
+### Error: "chmod: cannot access 'artisan': No such file or directory"
+```bash
+# File artisan tidak ada, download terpisah:
+wget https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/master/artisan -O artisan
+chmod +x artisan
+
+# ATAU gunakan script fix otomatis:
+php fix-missing-artisan.php
+```
+
+**📖 Panduan lengkap:** Lihat file `FIX_ARTISAN_NOT_FOUND.md`
+
 ### Error: "Directory not empty"
 ```bash
 # Backup & clean:
