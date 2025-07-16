@@ -31,6 +31,43 @@ function log_error($message) {
     echo "❌ $message\n";
 }
 
+// Step 0: Check for lamdakubackend folder issue
+log_info("Step 0: Checking for folder structure issues...");
+
+if (is_dir('lamdakubackend') && !file_exists('artisan')) {
+    log_warning("Found 'lamdakubackend' folder - git clone created subfolder");
+    log_info("Moving files from lamdakubackend/ to current directory...");
+    
+    // Get list of files in lamdakubackend
+    $files = glob('lamdakubackend/*');
+    $hiddenFiles = glob('lamdakubackend/.*');
+    
+    // Move visible files
+    foreach($files as $file) {
+        $basename = basename($file);
+        if (rename($file, $basename)) {
+            log_info("Moved: $basename");
+        }
+    }
+    
+    // Move hidden files
+    foreach($hiddenFiles as $file) {
+        $basename = basename($file);
+        if ($basename !== '.' && $basename !== '..') {
+            if (rename($file, $basename)) {
+                log_info("Moved hidden: $basename");
+            }
+        }
+    }
+    
+    // Remove empty lamdakubackend folder
+    if (rmdir('lamdakubackend')) {
+        log_success("Removed empty lamdakubackend folder");
+    }
+    
+    log_success("Files moved from lamdakubackend/ to current directory");
+}
+
 // Step 1: Diagnose current state
 log_info("Step 1: Diagnosing current state...");
 echo "📍 Current directory: " . getcwd() . "\n";
@@ -255,15 +292,49 @@ if (file_exists('artisan')) {
     $artisanCheck = shell_exec('ls -la artisan 2>&1');
     echo "📄 artisan file details:\n$artisanCheck\n";
     
-    if (file_exists('vendor/autoload.php')) {
-        $artisanTest = shell_exec('php artisan --version 2>&1');
-        if ($artisanTest && strpos($artisanTest, 'Laravel') !== false) {
-            log_success("artisan working: " . trim($artisanTest));
+    // Test artisan with detailed error checking
+    log_info("Testing artisan command...");
+    
+    if (!file_exists('vendor/autoload.php')) {
+        log_warning("vendor/autoload.php not found - Laravel dependencies missing");
+        log_info("Attempting to install dependencies...");
+        
+        // Try composer first
+        $composerTest = shell_exec('composer --version 2>&1');
+        if (strpos($composerTest, 'Composer') !== false) {
+            log_info("Composer found, installing dependencies...");
+            $composerInstall = shell_exec('composer install --no-dev --optimize-autoloader 2>&1');
+            echo "📦 Composer output: " . substr($composerInstall, 0, 200) . "...\n";
         } else {
-            log_warning("artisan test failed: " . trim($artisanTest));
+            log_warning("Composer not available, trying alternative download...");
+            log_info("Note: You may need to install dependencies manually");
         }
+    }
+    
+    // Test artisan again
+    $artisanTest = shell_exec('php artisan --version 2>&1');
+    if ($artisanTest && strpos($artisanTest, 'Laravel') !== false) {
+        log_success("artisan working: " . trim($artisanTest));
     } else {
-        log_warning("vendor/autoload.php not found - run 'composer install' first");
+        log_warning("artisan test failed");
+        echo "🔍 Error details: " . trim($artisanTest) . "\n";
+        
+        // Additional debugging
+        $phpTest = shell_exec('php -v 2>&1');
+        echo "🐘 PHP version: " . trim(explode("\n", $phpTest)[0]) . "\n";
+        
+        if (!file_exists('bootstrap/app.php')) {
+            log_warning("bootstrap/app.php missing - Laravel bootstrap file required");
+        }
+        
+        if (!file_exists('config/app.php')) {
+            log_warning("config/app.php missing - Laravel config required");
+        }
+        
+        echo "💡 If artisan exists but doesn't work:\n";
+        echo "   1. Check: composer install --no-dev\n";
+        echo "   2. Check: php -d display_errors=1 artisan --version\n";
+        echo "   3. Consider: Complete project re-download\n";
     }
 } else {
     log_error("artisan file still missing after fix attempt");

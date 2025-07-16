@@ -23,6 +23,11 @@ return [
         'http://127.0.0.1:3001',
         'http://192.168.40.221:3000',
         'http://192.168.40.221:3001',
+        'https://lamdaku.com',
+        'http://lamdaku.com',
+        'https://www.lamdaku.com',
+        'http://www.lamdaku.com',
+        '*'  // Allow all origins for production
     ],
 
     'allowed_origins_patterns' => [

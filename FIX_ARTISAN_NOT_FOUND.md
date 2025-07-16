@@ -2,7 +2,7 @@
 
 ## ⚠️ ERROR: File artisan tidak ditemukan saat set permissions
 
-**Masalah:** File `artisan` tidak ada di direktori server
+**Masalah:** File `artisan` tidak ada di direktori server (biasanya karena git clone membuat folder `lamdakubackend` bukan langsung ke folder API)
 
 ---
 
@@ -17,11 +17,15 @@ pwd
 ls -la
 # Lihat apakah ada file artisan
 
-# 3. Cari file artisan di subdirektori
+# 3. Cek apakah ada folder lamdakubackend
+ls -la lamdakubackend/ 2>/dev/null
+# Jika ada, file ada di dalam folder ini
+
+# 4. Cari file artisan di subdirektori
 find . -name "artisan" -type f 2>/dev/null
 # Akan menampilkan lokasi file artisan jika ada
 
-# 4. Cek apakah di folder salah
+# 5. Cek apakah di folder salah
 ls -la */artisan 2>/dev/null
 ```
 
@@ -29,7 +33,26 @@ ls -la */artisan 2>/dev/null
 
 ## 🔧 SOLUSI BERDASARKAN KONDISI
 
-### KONDISI 1: File artisan tidak ada sama sekali
+### KONDISI 1: Git clone membuat folder `lamdakubackend` (PALING UMUM)
+
+```bash
+# Jika git clone membuat folder lamdakubackend, pindahkan isinya:
+ls -la lamdakubackend/
+# Cek apakah ada artisan di dalam folder
+
+# Pindahkan semua file ke direktori root
+mv lamdakubackend/* .
+mv lamdakubackend/.* . 2>/dev/null || true
+rm -rf lamdakubackend
+
+# Verifikasi artisan sekarang ada di root
+ls -la artisan
+
+# Set permissions
+chmod +x artisan
+```
+
+### KONDISI 2: File artisan tidak ada sama sekali
 
 ```bash
 # Download file artisan secara terpisah
@@ -42,14 +65,33 @@ chmod +x artisan
 php artisan --version
 ```
 
-### KONDISI 2: Project belum di-download/clone
+### KONDISI 2: File artisan tidak ada sama sekali
+
+```bash
+# Download file artisan secara terpisah
+wget https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/master/artisan -O artisan
+
+# Set permissions
+chmod +x artisan
+
+# Test
+php artisan --version
+```
+
+### KONDISI 3: Project belum di-download/clone
 
 ```bash
 # Clean dan download ulang project
 rm -rf * .* 2>/dev/null || true
 
-# Clone project
+# Clone project ke direktori saat ini (gunakan titik di akhir)
 git clone https://github.com/lipamitranusa/lamdakubackend.git .
+
+# ATAU jika clone membuat folder lamdakubackend:
+git clone https://github.com/lipamitranusa/lamdakubackend.git
+mv lamdakubackend/* .
+mv lamdakubackend/.* . 2>/dev/null || true
+rm -rf lamdakubackend
 
 # Verifikasi artisan ada
 ls -la artisan
@@ -58,7 +100,29 @@ ls -la artisan
 chmod +x artisan
 ```
 
-### KONDISI 3: Artisan ada di subfolder
+### KONDISI 3: Project belum di-download/clone
+
+```bash
+# Clean dan download ulang project
+rm -rf * .* 2>/dev/null || true
+
+# Clone project ke direktori saat ini (gunakan titik di akhir)
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+
+# ATAU jika clone membuat folder lamdakubackend:
+git clone https://github.com/lipamitranusa/lamdakubackend.git
+mv lamdakubackend/* .
+mv lamdakubackend/.* . 2>/dev/null || true
+rm -rf lamdakubackend
+
+# Verifikasi artisan ada
+ls -la artisan
+
+# Set permissions
+chmod +x artisan
+```
+
+### KONDISI 4: Artisan ada di subfolder
 
 ```bash
 # Jika artisan ada di subfolder (misal: lamdakubackend-main/)
@@ -73,7 +137,7 @@ mv */* . 2>/dev/null || true
 chmod +x artisan
 ```
 
-### KONDISI 4: Upload tidak lengkap
+### KONDISI 5: Upload tidak lengkap
 
 ```bash
 # Re-upload menggunakan wget
@@ -93,7 +157,7 @@ chmod +x artisan
 
 ```bash
 # COPY-PASTE COMMAND INI untuk fix artisan missing:
-[ ! -f "artisan" ] && { echo "Artisan missing, downloading..."; wget -q https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/master/artisan -O artisan && echo "✅ Artisan downloaded"; } && chmod +x artisan && ls -la artisan && echo "✅ Artisan permissions set"
+[ ! -f "artisan" ] && { echo "Downloading project..."; git clone https://github.com/lipamitranusa/lamdakubackend.git temp && mv temp/* . && mv temp/.* . 2>/dev/null || true && rm -rf temp; } || { echo "Artisan missing, downloading..."; wget -q https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/master/artisan -O artisan; } && chmod +x artisan && ls -la artisan && echo "✅ Project setup complete"
 ```
 
 ---
@@ -324,6 +388,112 @@ ls -la composer.json app/ config/ bootstrap/
 
 # 4. Test basic functionality
 php artisan list
+```
+
+---
+
+## 🔴 TROUBLESHOOTING: php artisan --version tidak muncul
+
+### Jika `ls -la artisan` sudah benar tapi `php artisan --version` tidak muncul:
+
+```bash
+# 1. Cek dependencies Laravel
+ls -la vendor/autoload.php
+# Jika tidak ada, dependencies belum terinstall
+
+# 2. Cek error message
+php artisan --version 2>&1
+# Lihat error message lengkap
+
+# 3. Cek struktur Laravel
+ls -la bootstrap/app.php
+# File ini harus ada untuk Laravel bisa jalan
+```
+
+### SOLUSI untuk php artisan --version tidak keluar:
+
+```bash
+# SOLUSI 1: Install dependencies
+composer install --no-dev --optimize-autoloader
+
+# SOLUSI 1b: Jika composer tidak ada, install dulu
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar composer
+chmod +x composer
+./composer install --no-dev --optimize-autoloader
+
+# SOLUSI 2: Jika composer tidak tersedia, download vendor
+wget https://github.com/lipamitranusa/lamdakubackend/releases/download/vendor/vendor.zip
+unzip vendor.zip
+rm vendor.zip
+
+# SOLUSI 3: Download full project structure
+rm -rf * .* 2>/dev/null || true
+git clone https://github.com/lipamitranusa/lamdakubackend.git .
+chmod +x artisan
+
+# SOLUSI 4: Manual fix bootstrap
+if [ ! -f "bootstrap/app.php" ]; then
+    mkdir -p bootstrap
+    wget -O bootstrap/app.php https://raw.githubusercontent.com/lipamitranusa/lamdakubackend/master/bootstrap/app.php
+fi
+
+# SOLUSI 5: Test dengan error output
+php -d display_errors=1 artisan --version
+```
+
+### ONE-LINER untuk fix dependencies:
+
+```bash
+# Fix lengkap jika artisan ada tapi tidak jalan (dengan install composer)
+[ ! -f "vendor/autoload.php" ] && { echo "Installing dependencies..."; composer install --no-dev --optimize-autoloader 2>/dev/null || { echo "Installing Composer..."; curl -sS https://getcomposer.org/installer | php && mv composer.phar composer && chmod +x composer && ./composer install --no-dev --optimize-autoloader; } || { echo "Downloading vendor..."; wget -q https://github.com/lipamitranusa/lamdakubackend/releases/download/vendor/vendor.zip && unzip -q vendor.zip && rm vendor.zip; }; } && php artisan --version && echo "✅ Laravel ready!"
+```
+
+### Cek manual error:
+
+```bash
+# Debug step by step
+php -v                           # Cek PHP version
+which php                       # Cek PHP location
+cat artisan | head -5           # Cek shebang artisan
+php -l artisan                  # Cek syntax artisan
+php -d display_errors=1 -r "require 'vendor/autoload.php'; echo 'OK';" # Cek autoload
+```
+
+---
+
+## 🔧 INSTALL ULANG COMPOSER
+
+Jika Composer tidak tersedia atau rusak:
+
+```bash
+# ONE-LINER install Composer + dependencies
+curl -sS https://getcomposer.org/installer | php && mv composer.phar composer && chmod +x composer && ./composer install --no-dev --optimize-autoloader && echo "✅ Composer installed and Laravel ready!"
+
+# Atau step by step:
+# 1. Download Composer
+curl -sS https://getcomposer.org/installer | php
+
+# 2. Setup
+mv composer.phar composer
+chmod +x composer
+
+# 3. Install dependencies
+./composer install --no-dev --optimize-autoloader
+
+# 4. Test
+php artisan --version
+```
+
+### Alternatif install Composer:
+
+```bash
+# Jika curl tidak ada, gunakan wget
+wget -O composer-setup.php https://getcomposer.org/installer
+php composer-setup.php
+rm composer-setup.php
+mv composer.phar composer
+chmod +x composer
 ```
 
 **💡 TIP:** Simpan script `fix-missing-artisan.php` untuk emergency fix di masa depan!
